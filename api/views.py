@@ -19,5 +19,5 @@ class ProductView(ModelViewSet):
     serializer_class = ProductSerializer
 
 class OrderView(ModelViewSet):
-    queryset = Order.objects.all()
+    queryset = Order.objects.prefetch_related('items__product').all()
     serializer_class = OrderSerializer
