@@ -1,0 +1,53 @@
+2. Database Models
+
+    Define Product model (name, description, price, images, category, stock)
+
+    Define Category model
+
+    Define Order model
+
+    Define OrderItem model
+
+    Define User model (extend if needed)
+
+3. Admin Setup
+
+    Register models in admin.py
+
+    Set up admin interface for managing products/orders
+
+4. API Serializers
+
+    Create serializers for each model using DRF
+
+    Handle image serialization
+
+5. API Views
+
+    Create views for:
+
+        Product list and detail
+
+        Category list
+
+        Order creation
+
+        User registration/login
+
+6. URL Configuration
+
+    Set up API endpoints
+
+    Configure URL routing
+
+7. Authentication
+
+    Set up user authentication
+
+    Implement token-based auth or JWT
+
+8. Basic Permissions
+
+    Add read/write permissions
+
+    Set up admin-only endpoints for product management
