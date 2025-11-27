@@ -18,7 +18,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     product = serializers.SlugRelatedField(slug_field='name', queryset=Product.objects.all())
     class Meta:
         model = OrderItem
-        fields = ['id', 'order', 'product', 'quantity', 'price_at_purchase']
+        fields = ['id', 'order', 'product', 'quantity', 'price_at_purchase', 'color', 'size']
 
 class OrderSerializer(serializers.ModelSerializer):
     customer = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
@@ -26,3 +26,21 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['customer', 'order_number', 'order_date', 'status', 'total_amount', 'shipping_address', 'payment_status', 'payment_method', 'items']
+
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = ['id', 'user', 'created_at', 'updated_at', 'cart_number']
+        
+class CheckoutSerializer(serializers.Serializer):
+    shipping_address = serializers.CharField(required=True)
+    payment_method = serializers.ChoiceField(
+        choices=[
+            ('esewa', 'E-sewa'),
+            ('connectips', 'ConnectIPS'),
+            ('cod', 'Cash on Delivery'),
+            ('visa', 'Visa'),
+            ('mastercard', 'Mastercard')
+        ],
+        required=True
+    )

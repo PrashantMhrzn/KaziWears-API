@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import first_view, ProductView, OrderView, CategoryView
+from .views import ProductView, OrderView, CategoryView, CartView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -7,6 +7,7 @@ router = DefaultRouter()
 router.register(r'products', ProductView)
 router.register(r'category', CategoryView)
 router.register(r'orders', OrderView)
+router.register(r'cart', CartView, basename='cart')
 
 urlpatterns = [
     path('', include(router.urls)),
