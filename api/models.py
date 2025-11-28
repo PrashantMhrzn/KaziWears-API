@@ -84,9 +84,15 @@ class Cart(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     cart_number = models.CharField(default=generate_random_code, unique=True, max_length=6)
 
+    def __str__(self):
+        return f'Cart number: {self.cart_number} of User: {self.user}'
+
 class CartItems(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     size = models.CharField(max_length=20)
     color = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'Cart Item: {self.product} of Cart: {self.cart}'
