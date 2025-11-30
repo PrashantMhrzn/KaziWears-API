@@ -3,9 +3,12 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, action
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from .models import Category, Product, Order, OrderItem, User, Cart
-from .serializers import CategorySerializer, ProductSerializer, OrderSerializer, CheckoutSerializer, CartSerializer
+from .models import Category, Product, Order, OrderItem, User, Cart, Payment
+from .serializers import CategorySerializer, ProductSerializer, OrderSerializer, CheckoutSerializer, CartSerializer, PaymentSerializer
 from django.db import transaction
+import stripe
+import os
+stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
 # Create your views here.
 @api_view(['GET'])
@@ -111,3 +114,72 @@ class CartView(ModelViewSet):
             return Response({"error": "Cart not found"})
         except  Exception as e:
             return Response({"error": f"Checkout failed: {str(e)}"})
+
+# Payment request 
+class PaymentView(ModelViewSet):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+
+    # Insted of taking data for normal payment object with all fields, we only take order id for now
+    def create(self, request):
+        order_id = request.data.get('order_id')
+
+        # Now we need to create the payment intent for the received order
+        try:
+            # first we get the order of which we are going to process the payment
+            order = Order.objects.get(id=order_id, customer=request.user)
+
+            # now we create Stripe PaymentIntent
+            intent = stripe.PaymentIntent.create(
+                amount=int(order.total_amount * 100),
+                currency='usd',
+                metadata={
+                    'order_id': order.id,
+                    'customer_id': request.user.id
+                }
+            )
+
+            # create a payment object 
+            payment = Payment.objects.create(
+                order = order,
+                stripe_payment_intent_id=intent.id,
+                amount=order.total_amount
+            )
+
+            serializer = self.get_serializer(payment)
+            response_data = serializer.data
+            response_data['client_secret'] = intent.client_secret
+            return Response(response_data)
+                    
+        except Order.DoesNotExist:
+            return Response({"error": "Order not found"})
+
+    @action(detail=True, methods=['post'])
+    def confirm(self, request, pk=None):
+        """
+        Confirm payment status
+        POST /api/payment/{id}/confirm/
+        """
+        payment = self.get_object()
+        
+        # Check payment status with Stripe
+        intent = stripe.PaymentIntent.retrieve(payment.stripe_payment_intent_id)
+        
+        if intent.status == 'succeeded':
+            payment.status = 'completed'
+            payment.save()
+            
+            # Update order status
+            payment.order.payment_status = 'paid'
+            payment.order.status = 'processing'
+            payment.order.save()
+            
+            return Response({
+                "success": True,
+                "message": "Payment confirmed successfully",
+                "order_status": payment.order.status
+            })
+        else:
+            return Response({
+                "error": f"Payment not completed. Status: {intent.status}"
+            })
