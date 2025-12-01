@@ -154,6 +154,7 @@ class PaymentView(ModelViewSet):
         except Order.DoesNotExist:
             return Response({"error": "Order not found"})
 
+    # custom endpoint with only POST /api/payment/{id}/confirm/
     @action(detail=True, methods=['post'])
     def confirm(self, request, pk=None):
         """
@@ -183,3 +184,4 @@ class PaymentView(ModelViewSet):
             return Response({
                 "error": f"Payment not completed. Status: {intent.status}"
             })
+    
