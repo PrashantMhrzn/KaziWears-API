@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from .models import Category, Product, Order, OrderItem, User, Cart, Payment, CartItems
 from .serializers import CategorySerializer, ProductSerializer, OrderSerializer, CheckoutSerializer, CartSerializer, PaymentSerializer, AddToCartSerializer
 from django.db import transaction
+from .utils import send_order_confirmation_email
 import stripe
 import os
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
@@ -103,6 +104,13 @@ class CartView(ModelViewSet):
                     # 5. Update inventory
                     cart_item.product.stock_quantity -= cart_item.quantity
                     cart_item.product.save()
+
+                # Send Email
+                try:
+                    send_order_confirmation_email(order, request)
+                except Exception as e:
+                    print(f"Email sending failed (but order created): {str(e)}")
+                    # Don't fail the whole checkout if email fails
 
                 # 6. Clear cart
                 cart.cart_items.all().delete()

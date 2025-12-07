@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #4F46E5; color: white; padding: 20px; text-align: center; }
+        .content { padding: 30px; background-color: #f9f9f9; }
+        .order-details { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; }
+        .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+        .button { background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Thank You for Your Order!</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hello {{ customer_name }},</p>
+            <p>Your order has been successfully placed. Here are your order details:</p>
+            
+            <div class="order-details">
+                <h3>Order #{{ order_number }}</h3>
+                <p><strong>Order Date:</strong> {{ order_date }}</p>
+                <p><strong>Total Amount:</strong> Rs. {{ total_amount }}</p>
+                <p><strong>Shipping Address:</strong> {{ shipping_address }}</p>
+                <p><strong>Payment Method:</strong> {{ payment_method }}</p>
+                <p><strong>Status:</strong> {{ status }}</p>
+            </div>
+            
+            <h3>Order Items:</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr style="background-color: #f2f2f2;">
+                    <th style="padding: 10px; text-align: left;">Product</th>
+                    <th style="padding: 10px; text-align: left;">Size</th>
+                    <th style="padding: 10px; text-align: left;">Color</th>
+                    <th style="padding: 10px; text-align: left;">Quantity</th>
+                    <th style="padding: 10px; text-align: left;">Price</th>
+                </tr>
+                {% for item in order_items %}
+                <tr>
+                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ item.product_name }}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ item.size }}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ item.color }}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ item.quantity }}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #ddd;">Rs. {{ item.price }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            
+            <p style="margin-top: 30px;">
+                <a href="{{ order_link }}" class="button">View Order Details</a>
+            </p>
+            
+            <p>We'll notify you when your order ships. If you have any questions, reply to this email.</p>
+            
+            <p>Best regards,<br>
+            <strong>The Kazi Wears Team</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p>Kazi Wears &copy; {{ current_year }}. All rights reserved.</p>
+            <p>This email was sent to {{ customer_email }}.</p>
+        </div>
+    </div>
+</body>
+</html>

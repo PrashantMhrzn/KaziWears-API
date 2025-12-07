@@ -1,0 +1,18 @@
+Thank you for your order!
+
+Order #{{ order_number }}
+Order Date: {{ order_date }}
+Total Amount: Rs. {{ total_amount }}
+Shipping Address: {{ shipping_address }}
+Payment Method: {{ payment_method }}
+Status: {{ status }}
+
+Order Items:
+{% for item in order_items %}
+- {{ item.product_name }} ({{ item.size }}, {{ item.color }}): {{ item.quantity }} x Rs. {{ item.price }}
+{% endfor %}
+
+View your order: {{ order_link }}
+
+Best regards,
+The Kazi Wears Team

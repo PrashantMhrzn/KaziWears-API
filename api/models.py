@@ -97,7 +97,7 @@ class CartItems(models.Model):
     color = models.CharField(max_length=50)
 
     def __str__(self):
-        return f'Cart Item: {self.product} of Cart: {self.cart}'
+        return f' {self.product} of {self.cart}'
     
 class Payment(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)

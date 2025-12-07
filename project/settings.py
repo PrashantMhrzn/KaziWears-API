@@ -59,10 +59,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'project.urls'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'api/templates'),  # Add this
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -172,3 +175,13 @@ STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 # Media files (uploaded images)
 MEDIA_URL = '/media/'  # URL to access media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory to store files
+
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # For Gmail
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = 'Kazi Wears <noreply@kazi-wears.com>'
+
