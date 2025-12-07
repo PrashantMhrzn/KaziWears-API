@@ -10,7 +10,7 @@ class ProductSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(slug_field='name', queryset=Category.objects.all())
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'price', 'category', 'size', 'color', 'stock_quantity', 'is_available', 'created_at', 'updated_at', 'unique_code']
+        fields = ['id', 'name', 'description', 'price', 'category', 'size', 'color', 'stock_quantity', 'is_available', 'created_at', 'updated_at', 'unique_code', 'image']
 
 class OrderItemSerializer(serializers.ModelSerializer):
     order = serializers.SlugRelatedField(slug_field='order_number', queryset=Order.objects.all())

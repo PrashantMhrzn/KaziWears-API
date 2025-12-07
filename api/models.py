@@ -31,27 +31,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     # if you use generate_random_code(), it would call the function once when the model is loaded and use the same value for every new instance
     unique_code = models.CharField(default=generate_random_code, unique=True, max_length=6)
-    main_image = models.ImageField(
-        upload_to='products/main/', 
-        null=True, 
-        blank=True,
-        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'webp'])]
-    )
-    image_2 = models.ImageField(
-        upload_to='products/extra/', 
-        null=True, 
-        blank=True
-    )
-    image_3 = models.ImageField(
-        upload_to='products/extra/', 
-        null=True, 
-        blank=True
-    )
-    image_4 = models.ImageField(
-        upload_to='products/extra/', 
-        null=True, 
-        blank=True
-    )
+    image = models.ImageField(upload_to='products/', blank=True, null=True)
 
     def __str__(self):
         return f'{self.category}: {self.name}'
