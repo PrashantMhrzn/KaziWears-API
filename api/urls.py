@@ -12,7 +12,4 @@ router.register(r'cart', CartView, basename='cart')
 
 urlpatterns = [
     path('', include(router.urls)),
-    # path('category/', CategoryView.as_view({'get': 'list'})),
-    # path('products/', ProductView.as_view({'get': 'list'})),
-    # path('orders/', OrderView.as_view({'get': 'list'})),
 ]
